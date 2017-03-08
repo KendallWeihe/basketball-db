@@ -1,0 +1,31 @@
+TODO:
+  start at most recent date
+  for all days:
+    for all games in day:
+      open box score link
+      find name of team1
+        open team1 file for this season
+        collect stats
+        append stats to file data
+        save file
+      find name of team2
+        repeat for team2
+
+    go to previous day
+
+    if date is before october, then begin new season
+      mkdir new season
+      set season directory
+
+
+directory layout:
+  seasons/
+    ---- 2017/
+        ---- kentucky.csv
+        ---- louisville.csv
+    -------- ...
+    ---- 2016/
+    ---- ...
+
+file layout:
+  columns: date | identifier for team 2 | stats for team 1 | stats for team 2
