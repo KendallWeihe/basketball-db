@@ -6,8 +6,8 @@ import re
 import os
 
 website = "http://www.sports-reference.com"
-dayLink = "/cbb/boxscores"
-year = "2017"
+dayLink = "/cbb/boxscores/index.cgi?month=1&day=1&year=2017"
+innerYear, year = "2017", "2017"
 
 while 1:
     print dayLink
@@ -21,7 +21,7 @@ while 1:
             r = requests.get(website+gameLink)
             soup = BeautifulSoup(r.text, "html.parser")
 
-            date = float(gameLink[gameLink.index(year):gameLink.index(year)+4] + gameLink[gameLink.index(year)+5:gameLink.index(year)+7] + gameLink[gameLink.index(year)+8:gameLink.index(year)+10])
+            date = float(gameLink[gameLink.index(innerYear):gameLink.index(innerYear)+4] + gameLink[gameLink.index(innerYear)+5:gameLink.index(innerYear)+7] + gameLink[gameLink.index(innerYear)+8:gameLink.index(innerYear)+10])
 
             tr1 = soup.findAll('tr', class_='thead')[1].findAll('td')
             tr2 = soup.findAll('tr', class_='thead')[3].findAll('td')
@@ -61,8 +61,12 @@ while 1:
             print gameLink
             pass
 
+    nextDate = str(outerSoup.findAll('a', class_='button2')[0].string)
+    if re.findall("December", nextDate) and innerYear == year:
+        innerYear = str(int(innerYear)-1)
+
     dayLink = str(outerSoup.findAll('a', class_='button2')[0]['href'])
-    date = str(soup.findAll('a', class_='button2')[0].string)
-    if re.findall("September", date):
+    date = str(outerSoup.findAll('a', class_='button2')[0].string)
+    if re.findall("September", date) and innerYear != year:
         year = str(int(year)-1)
         os.mkdir("./seasons/"+year)
