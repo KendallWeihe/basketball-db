@@ -6,7 +6,7 @@ import re
 import os
 
 website = "http://www.sports-reference.com"
-dayLink = "/cbb/boxscores/index.cgi?month=03&day=07&year=2017"
+dayLink = "/cbb/boxscores"
 year = "2017"
 
 while 1:
@@ -21,6 +21,8 @@ while 1:
             r = requests.get(website+gameLink)
             soup = BeautifulSoup(r.text, "html.parser")
 
+            date = float(gameLink[gameLink.index(year):gameLink.index(year)+4] + gameLink[gameLink.index(year)+5:gameLink.index(year)+7] + gameLink[gameLink.index(year)+8:gameLink.index(year)+10])
+
             tr1 = soup.findAll('tr', class_='thead')[1].findAll('td')
             tr2 = soup.findAll('tr', class_='thead')[3].findAll('td')
 
@@ -34,30 +36,33 @@ while 1:
             score2 = float(soup.findAll('div', class_='score')[1].string)
             spread = score1 - score2
 
-            team1_out = team1_stats_today + team2_stats_today + [score1, score2, spread]
-            team2_out = team2_stats_today + team1_stats_today + [score1, score2, spread]
+            team1_out = [date] + team1_stats_today + team2_stats_today + [score1, score2, spread]
+            team2_out = [date] + team2_stats_today + team1_stats_today + [score1, score2, spread]
 
             team1 = str(teams[i].findAll('a')[0].string).replace(" ", "-").replace("\'", "")
             team2 = str(teams[i].findAll('a')[2].string).replace(" ", "-").replace("\'", "")
 
             try:
                 team1_stats = np.genfromtxt("./seasons/"+year+"/"+team1+".csv", delimiter=",")
-                team2_stats = np.genfromtxt("./seasons/"+year+"/"+team2+".csv", delimiter=",")
-
                 team1_stats = np.vstack((team1_stats, team1_out))
-                team2_stats = np.vstack((team2_stats, team2_out))
             except:
                 team1_stats = np.array([team1_out])
+
+            try:
+                team2_stats = np.genfromtxt("./seasons/"+year+"/"+team2+".csv", delimiter=",")
+                team2_stats = np.vstack((team2_stats, team2_out))
+            except:
                 team2_stats = np.array([team2_out])
 
             np.savetxt("./seasons/"+year+"/"+team1+".csv", team1_stats, delimiter=",")
             np.savetxt("./seasons/"+year+"/"+team2+".csv", team2_stats, delimiter=",")
 
         except:
+            print gameLink
             pass
 
     dayLink = str(outerSoup.findAll('a', class_='button2')[0]['href'])
     date = str(soup.findAll('a', class_='button2')[0].string)
-    if re.findall("October", date):
+    if re.findall("September", date):
         year = str(int(year)-1)
         os.mkdir("./seasons/"+year)
