@@ -6,7 +6,7 @@ import re
 import os
 
 website = "http://www.sports-reference.com"
-dayLink = "/cbb/boxscores/index.cgi?month=1&day=1&year=2017"
+dayLink = "/cbb/boxscores"
 innerYear, year = "2017", "2017"
 
 while 1:
