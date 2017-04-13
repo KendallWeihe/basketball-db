@@ -5,6 +5,12 @@ import numpy as np
 import re
 import os
 
+teamsFile = open("teams.txt", "r")
+allTeams = teamsFile.read().splitlines()
+
+def findTeamIndex(team):
+    return allTeams.index(team)
+
 website = "http://www.sports-reference.com"
 dayLink = "/cbb/boxscores"
 innerYear, year = "2017", "2017"
@@ -32,15 +38,19 @@ while 1:
                 team1_stats_today.append(float(tr1[j].string))
                 team2_stats_today.append(float(tr2[j].string))
 
-            score1 = float(soup.findAll('div', class_='score')[0].string)
-            score2 = float(soup.findAll('div', class_='score')[1].string)
-            spread = score1 - score2
-
-            team1_out = [date] + team1_stats_today + team2_stats_today + [score1, score2, spread]
-            team2_out = [date] + team2_stats_today + team1_stats_today + [score1, score2, spread]
-
             team1 = str(teams[i].findAll('a')[0].string).replace(" ", "-").replace("\'", "")
             team2 = str(teams[i].findAll('a')[2].string).replace(" ", "-").replace("\'", "")
+
+            team1_index = findTeamIndex(team1)
+            team2_index = findTeamIndex(team2)
+
+            score1 = float(soup.findAll('div', class_='score')[0].string)
+            score2 = float(soup.findAll('div', class_='score')[1].string)
+            spread1 = score1 - score2
+            spread2 = score2 - score1
+
+            team1_out = [date] + team1_stats_today + team2_stats_today + [team2_index, score1, score2, spread1]
+            team2_out = [date] + team2_stats_today + team1_stats_today + [team1_index, score1, score2, spread2]
 
             try:
                 team1_stats = np.genfromtxt("./seasons/"+year+"/"+team1+".csv", delimiter=",")
