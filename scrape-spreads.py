@@ -67,4 +67,4 @@ for l in links:
         except:
             continue
 
-np.savetxt(aggregate_data, "./spreads/2017-feb-0-18.csv", delimiter=",")
+        np.savetxt("./spreads/2017-feb-0-18.csv", aggregate_data, delimiter=",")
