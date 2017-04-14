@@ -9,7 +9,7 @@ teams = teamsFile.read().splitlines()
 
 link = "https://www.teamrankings.com/ncb/schedules/?date=2017-02-"
 links = []
-for i in range(19):
+for i in range(1,19):
     links.append(link+'{:02}'.format(i))
 
 aggregate_data = []
