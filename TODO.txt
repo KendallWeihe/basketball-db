@@ -29,3 +29,24 @@ directory layout:
 
 file layout:
   columns: date | identifier for team 2 | stats for team 1 | stats for team 2
+
+
+TODO:
+  add the identifier to the data
+
+  when reading in the date:
+    define the game number to predict
+    go to that index
+    identify other team
+    splice off data from the previous game number
+    do the same for team2
+      NOTE: will need to find exact number/index -- may be different, so zero pad
+    concatenate the two files together
+
+  pad matrix with zeros
+  flip the data so that the first vector input is the first game of the season
+
+
+  collect data
+  train
+  adjust data inputs
